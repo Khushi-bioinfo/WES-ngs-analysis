@@ -3,7 +3,7 @@ Pipeline for variant calling and annotation using whole exome sequencing (WES) d
 
 
 ## WES Variant Analysis – Homo sapiens (GRCh38)
-This project performs whole-exome  sequencing (WGS) variant calling and annotation on SRR000964
+This project performs whole-exome  sequencing (WES) variant calling and annotation on SRR000964
 
 ## Dataset
 - **Accession ID:** [SRR000964](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR000964)  
