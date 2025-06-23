@@ -1,3 +1,4 @@
+## Whole Exome Sequencing Analysis Scripts
 This directory contains all the bash scripts used to run the Whole Exome Sequencing (WES) variant calling and annotation pipeline.
 Specifically, they cover:
 - Uploading the reference FASTA genome
