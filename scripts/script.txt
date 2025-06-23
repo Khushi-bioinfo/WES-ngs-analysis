@@ -1,0 +1,50 @@
+# Step 1: Download SRA file 
+prefetch SRR000964
+fastq-dump --split-files SRR000964
+
+# Step 2: Quality control using fastp
+fastp -i SRR000964_1.fastq \
+      -o SRR000964_1_cleaned.fastq\
+      -h fastp_report.html -j fastp_report.json
+
+# Step 3: Index reference genome
+bwa index GRCh38.genome.fa
+
+# Step 4: Align reads using BWA
+bwa mem GRCh38.genome.fa SRR000964_1_cleaned.fastq > aligned.sam
+
+# Step 5: Convert SAM to BAM
+samtools view -bS aligned.sam > aligned.bam
+
+# Step 6: Sort BAM file
+samtools sort aligned.bam -o aligned.sorted.bam
+
+# Step 7: Index BAM file
+samtools index aligned.sorted.bam
+
+# Step 8: Variant calling using FreeBayes
+freebayes -f GRCh38.genome.fa aligned.sorted.bam > variants.vcf
+
+# Step 9: Compress and index the VCF file (optional)
+bgzip variants.vcf
+tabix -p vcf variants.vcf.gz
+
+# Step 10: Filter variants with BCFtools
+bcftools filter -i 'QUAL>20' variants.vcf.gz -o filtered_variants.vcf
+
+# Step 11: Annotate using SnpEff (assumes database GRCh38.86 is installed)
+java -jar /home/dmin/SRR2584863\ -\ WGS/snpEff/snpEff.jar -v GRCh38.86 filtered_variants.vcf > annotated_variants.vcf
+
+# Step 12: Convert final annotated VCF to TSV (optional, using bcftools query)
+bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%QUAL\t[%ANN]\n' annotated_variants.vcf > variants.tsv
+
+
+
+
+
+
+
+
+
+
+
